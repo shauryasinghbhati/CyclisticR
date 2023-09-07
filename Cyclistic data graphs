@@ -1,0 +1,626 @@
+library(tidyverse)
+library(lubridate)
+library(hms)
+library(data.table)
+
+#loading the final csv table for the whole year
+cyclistic_df <- read.csv("C:\\Users\\hp\\Documents\\c final portfolio\\cyclistic_date.csv")
+
+
+#-----------------------------------------TOTAL RIDES--------------------------------------
+
+#total number of rides
+nrow(cyclistic_df)
+
+#-----------------MEMBER TYPE---------------------
+totalridespermember <- data.frame(cyclistic_df %>%
+  group_by(member_casual) %>%
+  count(member_casual))
+write.csv(totalridespermember, "totalridespermember.csv", row.names = FALSE)
+
+#----------------TYPE OF BIKE---------------------
+
+#total rides by member type 
+totalridesperbiketype <- data.frame(cyclistic_df %>%
+  group_by(member_casual, rideable_type) %>% 
+  count(rideable_type))
+write.csv(totalridesperbiketype, "totalridesperbike.csv", row.names= FALSE)
+
+#total rides 
+cyclistic_df %>%
+  group_by(rideable_type) %>% 
+  count(rideable_type)
+
+#-------------------HOUR--------------------------
+
+#total rides by member type 
+hour_member <- data.frame(cyclistic_df %>%
+  group_by(member_casual) %>% 
+  count(hour) %>% 
+  print(n = 48)) #lets you view the entire tibble
+write.csv(hour_member, "hourmember.csv", row.names= FALSE)
+
+#total rides
+cyclistic_df %>%
+  count(hour) %>% 
+  print(n, digits=2) #lets you view the entire tibble
+
+#----------------------TIME OF DAY-----------------------
+
+#-----morning-------
+#total rides by member type 
+cyclistic_df %>%
+  group_by(member_casual) %>% 
+  filter(time_of_day == "Morning") %>% 
+  count(time_of_day)
+
+#total rides
+cyclistic_df %>%
+  filter(time_of_day == "Morning") %>% 
+  count(time_of_day)
+
+#-----afternoon-------
+#total rides by member type 
+cyclistic_df %>%
+  group_by(member_casual) %>% 
+  filter(time_of_day == "Afternoon") %>% 
+  count(time_of_day)
+
+#total rides 
+cyclistic_df %>%
+  filter(time_of_day == "Afternoon") %>% 
+  count(time_of_day)
+
+#-----evening-------
+#total rides by member type
+cyclistic_df %>%
+  group_by(member_casual) %>% 
+  filter(time_of_day == "Evening") %>% 
+  count(time_of_day)
+
+#total rides
+cyclistic_df %>%
+  filter(time_of_day == "Evening") %>% 
+  count(time_of_day)
+
+#-----night-------
+#number of rides by member type
+cyclistic_df %>%
+  group_by(member_casual) %>% 
+  filter(time_of_day == "Night") %>% 
+  count(time_of_day)
+
+#number of rides 
+cyclistic_df %>%
+  filter(time_of_day == "Night") %>% 
+  count(time_of_day)
+
+#---all times of day----
+#total rides by member type 
+cyclistic_df %>%
+  group_by(member_casual) %>% 
+  count(time_of_day)
+
+#number of rides
+cyclistic_df %>%
+  group_by(time_of_day) %>% 
+  count(time_of_day)
+
+#----------------DAY OF THE WEEK------------------
+
+#total rides by member type
+daymembers <- data.frame(cyclistic_df %>%
+  group_by(member_casual) %>% 
+  count(day))
+
+#total rides 
+day <- data.frame(cyclistic_df %>%
+  count(day))
+
+#exporting df to csv for further analysis
+write.csv(daymembers, "daymembers.csv", row.names= FALSE)
+write.csv(day, "day.csv", row.names= FALSE)
+
+#----------------DAY OF THE MONTH-----------------
+
+#total rides by member type
+cyclistic_df %>%
+  group_by(member_casual) %>% 
+  count(month) %>% 
+  print(n = 62) #lets you view the entire tibble
+
+#total rides
+cyclistic_df %>%
+  count(month) %>% 
+  print(n = 31) #lets you view the entire tibble
+
+#---------------------MONTH-----------------------
+
+#total rides by member type 
+monthmembers <- data.frame(cyclistic_df %>%
+  group_by(member_casual) %>% 
+  count(month) %>% 
+  print(n = 24)) #lets you view the entire tibble
+
+#total rides
+month <- data.frame(cyclistic_df %>%
+  count(month)) 
+
+write.csv(monthmembers, "monthmembers.csv", row.names= FALSE)
+write.csv(month, "month.csv", row.names= FALSE)
+
+#--------------------SEASON-----------------------
+
+#-----spring-------
+
+#total rides by member type 
+cyclistic_df %>%
+  group_by(member_casual) %>% 
+  filter(season == "Spring") %>% 
+  count(season)
+
+#total rides
+cyclistic_df %>%
+  filter(season == "Spring") %>% 
+  count(season)
+
+#-----summer-------
+
+#total rides by member type
+cyclistic_df %>%
+  group_by(member_casual) %>% 
+  filter(season == "Summer") %>% 
+  count(season)
+
+#total rides
+cyclistic_df %>%
+  filter(season == "Summer") %>% 
+  count(season)
+
+#-----fall-------
+
+#total rides by member type
+cyclistic_df %>%
+  group_by(member_casual) %>% 
+  filter(season == "Fall") %>% 
+  count(season)
+
+#total rides
+cyclistic_df %>%
+  filter(season == "Fall") %>% 
+  count(season)
+
+#-----winter-------
+
+#total rides by member type
+cyclistic_df %>%
+  group_by(member_casual) %>% 
+  filter(season == "Winter") %>% 
+  count(season)
+
+#total rides 
+cyclistic_df %>%
+  filter(season == "Winter") %>% 
+  count(season)
+
+#-----all seasons-------
+
+#total rides by member type
+seasonmembers<- data.frame(cyclistic_df %>%
+  group_by(season, member_casual) %>% 
+  count(season))
+
+#total rides
+season <- data.frame(cyclistic_df %>%
+  group_by(season) %>% 
+  count(season))
+write.csv(seasonmembers, "seasonmembers.csv", row.names= FALSE)
+write.csv(season, "season.csv", row.names= FALSE)
+
+#------------------------------------AVERAGE RIDE LENGTH-----------------------------------
+
+#average of ride_length
+cyclistic_avgRide <- mean(cyclistic_df$duration)
+print(cyclistic_avgRide)
+
+#------------------MEMBER TYPE--------------------
+
+#average ride_length
+averagedurationpermember <- data.frame(cyclistic_df %>% group_by( member_casual) %>% 
+  summarise_at(vars(duration),
+               list(time = mean)))
+averagedurationpermember$time <- as.integer(averagedurationpermember$time)
+write.csv(averagedurationpermember, "avgduration.csv", row.names = FALSE )
+#----------------TYPE OF BIKE---------------------
+
+#total rides by member type 
+cyclistic_df %>% group_by(member_casual, rideable_type) %>% 
+  summarise_at(vars(duration),
+               list(time = mean))
+
+#average ride_length
+cyclistic_df %>% group_by(rideable_type) %>% 
+  summarise_at(vars(duration),
+               list(time = mean))
+
+#-----------------------HOUR-------------------------
+
+#average ride_length by member type
+avghourmember <- data.frame(cyclistic_df %>% group_by(hour, member_casual) %>% 
+  summarise_at(vars(duration),
+               list(time = mean)) %>% 
+  print(n=48)) #lets you view entire tibble
+
+#average ride_length
+avghour <- data.frame(cyclistic_df %>% group_by(hour) %>% 
+  summarise_at(vars(duration),
+               list(time = mean)) %>% 
+  print(n=24)) #lets you view entire tibble
+
+write.csv(avghourmember, "avghourmember.csv", row.names= FALSE)
+write.csv(avghour, "avghour.csv", row.names= FALSE)
+
+#--------------------TIME OF DAY---------------------
+
+#----morning----
+
+#average ride length by member type
+cyclistic_df %>% 
+  group_by(member_casual) %>% 
+  filter(time_of_day == "Morning") %>% 
+  summarise_at(vars(duration),
+               list(time = mean))
+
+#average ride length
+cyclistic_df %>% 
+  filter(time_of_day == "Morning") %>% 
+  summarise_at(vars(duration),
+               list(time = mean))
+
+#----afternoon----
+
+#average ride length by member type
+cyclistic_df %>% 
+  group_by(member_casual) %>% 
+  filter(time_of_day == "Afternoon") %>% 
+  summarise_at(vars(duration),
+               list(time = mean))
+
+#average ride length
+cyclistic_df %>% 
+  filter(time_of_day == "Afternoon") %>% 
+  summarise_at(vars(duration),
+               list(time = mean))
+
+#----evening----
+
+#average ride length by member type
+cyclistic_df %>% 
+  group_by(member_casual) %>% 
+  filter(time_of_day == "Evening") %>% 
+  summarise_at(vars(duration),
+               list(time = mean))
+
+#average ride length
+cyclistic_df %>% 
+  filter(time_of_day == "Evening") %>% 
+  summarise_at(vars(duration),
+               list(time = mean))
+
+#----night----
+
+#average ride length by member type 
+cyclistic_df %>% 
+  group_by(member_casual) %>% 
+  filter(time_of_day == "Night") %>% 
+  summarise_at(vars(duration),
+               list(time = mean))
+
+#average ride length
+cyclistic_df %>% 
+  filter(time_of_day == "Night") %>% 
+  summarise_at(vars(duration),
+               list(time = mean))
+
+#---all times of day---
+
+#average ride length by member type
+avgtodmember <- data.frame(cyclistic_df %>% 
+  group_by(time_of_day, member_casual) %>% 
+  summarise_at(vars(duration),
+               list(time = mean)))
+
+#average ride length
+avgtod <- data.frame(cyclistic_df %>% 
+  group_by(time_of_day) %>% 
+  summarise_at(vars(duration),
+               list(time = mean)))
+write.csv(avgtodmember, "avgtodmember.csv", row.names= FALSE)
+write.csv(avgtod, "avgtod.csv", row.names= FALSE)
+
+#-------------------DAY OF THE WEEK-----------------
+
+#average ride_length by member type
+avgdaymember <- data.frame(cyclistic_df %>% group_by(member_casual, day) %>% 
+  summarise_at(vars(duration),
+               list(time = mean)))
+
+#average ride_length 
+avgday <- data.frame(cyclistic_df %>% group_by(day) %>% 
+  summarise_at(vars(duration),
+               list(time = mean)))
+write.csv(avgdaymember, "avgdaymember.csv", row.names= FALSE)
+write.csv(avgday, "avgday.csv", row.names= FALSE)
+
+#-----------------DAY OF THE MONTH------------------
+
+#average ride_length by member type
+cyclistic_df %>% group_by(day, member_casual) %>% 
+  summarise_at(vars(duration),
+               list(time = mean)) %>% 
+  print(n=62)  #lets you view entire tibble
+
+#average ride_length
+cyclistic_df %>% group_by(day) %>% 
+  summarise_at(vars(duration),
+               list(time = mean)) %>% 
+  print(n=31)  #lets you view entire tibble
+
+#---------------------MONTH--------------------------
+
+#average ride_length by member type
+avgmonthmember <- data.frame(cyclistic_df %>% group_by(month, member_casual) %>% 
+  summarise_at(vars(duration),
+               list(time = mean)) %>% 
+  print(n=24))  #lets you view entire tibble
+
+#average ride_length
+avgmonth <- data.frame(cyclistic_df %>% group_by(month) %>% 
+  summarise_at(vars(duration),
+               list(time = mean)))
+write.csv(avgmonthmember, "avgmonthmember.csv", row.names= FALSE)
+write.csv(avgmonth, "avgmonth.csv", row.names= FALSE)
+
+#----------------------SEASON-------------------------
+
+#-----spring------
+
+#average ride length by member type
+cyclistic_df %>% 
+  group_by(member_casual) %>% 
+  filter(season == "Spring") %>% 
+  summarise_at(vars(duration),
+               list(time = mean))
+
+#average ride length
+cyclistic_df %>% 
+  filter(season == "Spring") %>% 
+  summarise_at(vars(duration),
+               list(time = mean))
+
+#-----summer------
+
+#average ride length by member type for summer 
+cyclistic_df %>% 
+  group_by(member_casual) %>% 
+  filter(season == "Summer") %>% 
+  summarise_at(vars(duration),
+               list(time = mean))
+
+#average ride length for summer 
+cyclistic_df %>% 
+  filter(season == "Summer") %>% 
+  summarise_at(vars(duration),
+               list(time = mean))
+
+#-----fall------
+
+#average ride length by member type
+cyclistic_df %>% 
+  group_by(member_casual) %>% 
+  filter(season == "Fall") %>% 
+  summarise_at(vars(duraton),
+               list(time = mean))
+
+#average ride length
+cyclistic_df %>% 
+  filter(season == "Fall") %>% 
+  summarise_at(vars(duration),
+               list(time = mean))
+
+#-----winter-----
+
+#average ride length by member type
+cyclistic_df %>% 
+  group_by(member_casual) %>% 
+  filter(season == "Winter") %>% 
+  summarise_at(vars(duration),
+               list(time = mean))
+
+#average ride length
+cyclistic_df %>% 
+  filter(season == "Winter") %>% 
+  summarise_at(vars(duration),
+               list(time = mean))
+
+#----all seasons----
+
+#average ride length by member type
+avgseasonmember <- data.frame(cyclistic_df %>% 
+  group_by(season, member_casual) %>% 
+  summarise_at(vars(duration),
+               list(time = mean)))
+
+#average ride length 
+avgseason <- data.frame(cyclistic_df %>% 
+  group_by(season) %>% 
+  summarise_at(vars(duration),
+               list(time = mean)))
+write.csv(avgseasonmember, "avgseasonmember.csv", row.names= FALSE)
+write.csv(avgseason, "avgseason.csv", row.names= FALSE)
+
+#---------------------------Graphical presentation of some select data frames-------------
+
+#-----Total rides per member-----
+ggplot(totalridespermember, aes(x="", y=n, fill=member_casual))+
+  geom_bar(stat = "identity", width=1)+
+  coord_polar("y", start=0)+
+  scale_fill_manual(values = c("orange", "purple"))+
+  ggtitle("Total Rides per member")+
+  geom_text(aes(label=paste0(n)), position = position_stack(vjust=0.5))+
+  theme_void()
+ggsave("totalridespermember.png")
+
+#-----Average ride duration per member----
+ggplot(averagedurationpermember, aes(x="", y=time, fill=member_casual))+
+  geom_bar(stat = "identity", width=1)+
+  coord_polar("y", start=0)+
+  scale_y_continuous(breaks =seq(0, max(averagedurationpermember$time), by=5))+
+  scale_fill_manual(values = c("orange", "purple"))+
+  geom_text(aes(label = paste0(time, " minutes ")), position = position_stack(vjust=0.5))+
+  ggtitle("Average Ride duration per member")+
+  theme_void()
+  
+ggsave("averagedurationpermember.png")
+
+
+#-------Total rides per bike type-----
+ggplot(totalridesperbiketype, aes(x = rideable_type)) + 
+  geom_col(aes(y = n, fill=member_casual), position = position_dodge(width =1))+
+  geom_col(aes(y=n, fill=member_casual), position = position_dodge(width = 1) )+
+  scale_fill_manual(values = c( "orange", "purple"))+
+  ggtitle("Total rides per bike-type")+
+  labs(x = "Type of bike", y = "Total rides")+
+  theme(axis.text.x = element_text(angle = 0, vjust = 1))
+
+ggsave("totalridesperbiketype.png")
+
+#------Average duration per hour per member----
+ggplot(avghourmember, aes(x = hour)) + 
+         geom_col(aes(y = time, fill=member_casual), position = position_dodge(width = 2))+
+  geom_col(aes(y=time, fill=member_casual), position = position_dodge(width = 1.5) )+
+  scale_fill_manual(values = c( "orange", "purple"))+
+  ggtitle("Average ride length per hour")+
+  labs(x = "hour", y = "time")+
+  labs(subtitle = "differentiated by member")+
+  theme(axis.text.x = element_text(angle = 90, vjust = 1))
+ggsave("averageridelengthperhourbymembertype.png")
+
+
+#----average duration per day per member---
+ggplot(avgdaymember, aes(x = day)) + 
+  geom_col(aes(y = time, fill=member_casual), position = position_dodge(width = 1))+
+  geom_col(aes(y=time, fill=member_casual), position = position_dodge(width = 0.8) )+
+  scale_fill_manual(values = c( "orange", "purple"))+
+  ggtitle("Average ride length per day")+
+  labs(x = "day", y = "time")+
+  labs(subtitle = "differentiated by member-type")+
+  theme(axis.text.x = element_text(angle = 90, vjust = 1))
+ggsave("averageridelengthperdaybymembertype.png")
+
+
+#------Average duration per season per member----
+avgseasonmember %>%
+  group_by(season) %>%
+  ggplot(aes(x = season))+
+  geom_col(aes(y=time, fill=member_casual), position = position_dodge(width = 1))+
+  geom_col(aes(y=time, fill=member_casual), position = position_dodge(width=0.8))+
+  scale_fill_manual(values = c("orange", "purple"))+
+  ggtitle("Average ride length over Season")+
+  labs(x = "Season", y = "Time")+
+  labs(subtitle = "differentiated by member-type")
+ggsave("averageridelengthperseasonbymembertype.png")
+
+#------Average duration time of day per member----
+avgtodmember %>%
+  group_by(time_of_day) %>%
+  ggplot(aes(x = time_of_day))+
+  geom_col(aes(y=time, fill=member_casual), position = position_dodge(width = 1))+
+  geom_col(aes(y=time, fill=member_casual), position = position_dodge(width=0.8))+
+  scale_fill_manual(values = c("orange", "purple"))+
+  ggtitle("Average ride length by time of day")+
+  labs(x = "Time of day", y = "Time")+
+  labs(subtitle = "differentiated by member-type")
+ggsave("averageridelengthpertodbymembertype.png")
+
+#------Average duration per month per member----
+avgmonthmember %>%
+  group_by(month) %>%
+  ggplot(aes(x = month))+
+  geom_col(aes(y=time, fill=member_casual), position = position_dodge(width = 1))+
+  geom_col(aes(y=time, fill=member_casual), position = position_dodge(width=0.8))+
+  scale_fill_manual(values = c("orange", "purple"))+
+  ggtitle("Average ride length per Month")+
+  labs(x = "Month", y = "Time")+
+  labs(subtitle = "differentiated by member-type")+
+  scale_x_discrete(limits = avgmonthmember$month)+
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
+
+ggsave("averageridelengthpermonthbymembertype.png")
+
+#------Average duration per day per member----
+library(scales)
+options(scipen=999)
+daymembers %>%
+  group_by(day) %>%
+  ggplot(aes(x =factor(day, levels=c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))))+
+  geom_col(aes(y=n, fill=member_casual), position = position_dodge(width = 0.5))+
+  geom_col(aes(y=n, fill=member_casual), position = position_dodge(width=1))+
+  scale_fill_manual(values = c("orange", "purple"))+
+  ggtitle("Total rides per day")+
+  labs(x = "Day", y = "Total Rides")+
+  labs(subtitle = "differentiated by member-type")+
+  scale_y_continuous(label = comma, expand = expansion(mult = c(0.1, 0.1)))+
+  scale_x_discrete(guide = guide_axis(n.dodge=2))+
+  geom_text(aes(label=n, y=n),angle=0, vjust = -0.5, size=3,position = position_dodge(width =0.8) , color="black")+
+  theme(panel.grid.major.x = element_line(linewidth = 1))+
+  theme(axis.title.x = element_text(angle = 0, vjust = 0.5, hjust = 1), axis.text.y = element_text(size = 10))
+  
+ggsave("totalridesperdaybymembertype.png")
+
+#------Total rides per month per member----
+options(scipen=999)
+monthmembers %>%
+  group_by(month) %>%
+  ggplot(aes(x = month))+
+  geom_col(aes(y=n, fill=member_casual), position = position_dodge(width = 0.5))+
+  geom_col(aes(y=n, fill=member_casual), position = position_dodge(width=1))+
+  scale_fill_manual(values = c("orange", "purple"))+
+  ggtitle("Total rides per month")+
+  labs(x = "Months", y = "Total Rides")+
+  labs(subtitle = "differentiated by member-type")+
+  scale_y_continuous(label = comma, expand = expansion(mult = c(0.1, 0.1)))+
+  scale_x_discrete(limits = avgmonthmember$month)+
+  theme(panel.grid.major.x = element_line(linewidth = 1))+
+  theme(axis.title.x = element_text(angle = 0, vjust = 0.5, hjust = 1), axis.text.y = element_text(size = 10))
+
+ggsave("totalridespermonthbymembertype.png")
+
+#------Total rides per season per member----
+seasonmembers %>%
+  group_by(season) %>%
+  ggplot(aes(x = season))+
+  geom_col(aes(y=n, fill=member_casual), position = position_dodge(width = 1))+
+  geom_col(aes(y=n, fill=member_casual), position = position_dodge(width=0.8))+
+  scale_fill_manual(values = c("orange", "purple"))+
+  ggtitle("Total rides over Seasons")+
+  labs(x = "Season", y = "Total Rides")+
+  labs(subtitle = "differentiated by member-type")+
+  scale_y_continuous(labels = comma, expand = expansion(mult = c(0.1, 0.1)))+
+  geom_text(aes(label=n, y=n),angle=0, vjust = -0.5, size=4,position = position_dodge(width =0.8) , color="black")
+ggsave("totalridesperseasonbymembertype.png")
+
+#------Total rides per hour per member----
+hour_member %>%
+  group_by(hour) %>%
+  ggplot(aes(x = hour))+
+  geom_col(aes(y=n, fill=member_casual), position = position_dodge(width = 1))+
+  geom_col(aes(y=n, fill=member_casual), position = position_dodge(width=0.8))+
+  scale_fill_manual(values = c("orange", "purple"))+
+  ggtitle("Total rides per hour")+
+  labs(x = "Hour", y = "Total Rides")+
+  labs(subtitle = "differentiated by member-type")+
+  scale_y_continuous(labels = comma, expand = expansion(mult = c(0.1, 0.1)))+
+  scale_x_discrete(limits = hour_member$hour, guide = guide_axis(n.dodge=2))+
+  theme(panel.grid.major.x = element_line(linewidth = 1))
+ggsave("totalridesperhourbymembertype.png")
