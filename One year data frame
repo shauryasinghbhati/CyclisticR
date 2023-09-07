@@ -1,0 +1,93 @@
+install.packages("plyr")
+library("plyr")
+library("dplyr")
+library("readr")
+library("readxl")
+library("tidyverse")
+library("lubridate")
+library("hms")
+library("data.table")
+
+cyclistic_data <- list.files(path = "C:\\Users\\hp\\Documents\\cyclistic_data",
+                             pattern = "*.csv",
+                             full.names = TRUE) %>%
+  lapply(read_csv) %>%
+  bind_rows
+cyclistic_data
+
+cyclistic_data <- transform(cyclistic_data, duration = end_at - start_at)
+cyclistic_data$duration <- difftime(cyclistic_data$end_at, cyclistic_data$start_at, units = "mins")
+
+cyclistic_date <- cyclistic_data
+
+
+#create columns for: day of week, month, day, year, time, hour
+cyclistic_date$date <- as.Date(cyclistic_date$started_at) #default format is yyyy-mm-dd, use start date
+cyclistic_date$date <- NULL
+rm(cyclistic_data)
+cyclistic_date$year <- format(as.Date(cyclistic_date$started_at, format="%d-%m-%Y"), "%Y") #create column for year
+
+cyclistic_date$month <- format(as.Date(cyclistic_date$started_at), "%m")#create column for month
+
+cyclistic_date$time <- as_hms((cyclistic_date$start_at)) #create new column for time
+cyclistic_date$hour <- hour(cyclistic_date$time) #create new column for hour
+
+#create column for different seasons: Spring, Summer, Fall, Winter
+cyclistic_date <- cyclistic_date %>% mutate(season = 
+                                             case_when(month == "03" ~ "Spring",
+                                                       month == "04" ~ "Spring",
+                                                       month == "05" ~ "Spring",
+                                                       month == "06"  ~ "Summer",
+                                                       month == "07"  ~ "Summer",
+                                                       month == "08"  ~ "Summer",
+                                                       month == "09" ~ "Fall",
+                                                       month == "10" ~ "Fall",
+                                                       month == "11" ~ "Fall",
+                                                       month == "12" ~ "Winter",
+                                                       month == "01" ~ "Winter",
+                                                       month == "02" ~ "Winter")
+)
+
+#create column for different time_of_day: Night, Morning, Afternoon, Evening
+cyclistic_date <- cyclistic_date %>% mutate(time_of_day = 
+                                             case_when(hour == "0" ~ "Night",
+                                                       hour == "1" ~ "Night",
+                                                       hour == "2" ~ "Night",
+                                                       hour == "3" ~ "Night",
+                                                       hour == "4" ~ "Night",
+                                                       hour == "5" ~ "Night",
+                                                       hour == "6" ~ "Morning",
+                                                       hour == "7" ~ "Morning",
+                                                       hour == "8" ~ "Morning",
+                                                       hour == "9" ~ "Morning",
+                                                       hour == "10" ~ "Morning",
+                                                       hour == "11" ~ "Morning",
+                                                       hour == "12" ~ "Afternoon",
+                                                       hour == "13" ~ "Afternoon",
+                                                       hour == "14" ~ "Afternoon",
+                                                       hour == "15" ~ "Afternoon",
+                                                       hour == "16" ~ "Afternoon",
+                                                       hour == "17" ~ "Afternoon",
+                                                       hour == "18" ~ "Evening",
+                                                       hour == "19" ~ "Evening",
+                                                       hour == "20" ~ "Evening",
+                                                       hour == "21" ~ "Evening",
+                                                       hour == "22" ~ "Evening",
+                                                       hour == "23" ~ "Evening")
+)
+
+
+
+View(cyclistic_date)
+
+#clean the data
+cyclistic_date <- na.omit(cyclistic_date) #remove rows with NA values
+cyclistic_date <- distinct(cyclistic_date) #remove duplicate rows 
+cyclistic_date <- cyclistic_date[!(cyclistic_date$duration <=0),] #remove where ride_length is 0 or negative
+
+
+write.csv(cyclistic_date, "C:\\Users\\hp\\Documents\\cyclistic_date.csv")
+
+#view the final data
+View(cyclistic_date)
+
